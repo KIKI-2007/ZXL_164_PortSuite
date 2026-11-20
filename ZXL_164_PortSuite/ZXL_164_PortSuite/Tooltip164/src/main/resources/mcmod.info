@@ -1,0 +1,18 @@
+[
+  {
+    "modid": "zxl_tooltip164",
+    "name": "ZXL Tooltip 1.6.4",
+    "description": "Clean-room Minecraft 1.6.4 Forge port scaffold by ZXL.",
+    "version": "0.1.0-alpha",
+    "mcversion": "1.6.4",
+    "url": "",
+    "updateUrl": "",
+    "authorList": [
+      "ZXL"
+    ],
+    "credits": "See project THIRD_PARTY_NOTICES.md",
+    "logoFile": "",
+    "screenshots": [],
+    "parent": ""
+  }
+]
