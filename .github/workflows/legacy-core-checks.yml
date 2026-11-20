@@ -1,0 +1,43 @@
+name: Legacy core checks
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  core-smoke:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Java 8
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '8'
+
+      - name: Download source scaffold archive
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p _source
+          curl --fail --location --retry 3 --output _source/source.zip 'https://1drv.ms/u/c/78393efee1e7a454/IQBEFNa1k_aJQKXcEWRxLi8lAf4Wu-7qhCz1kQkVhV4Zxz8?download=1'
+          unzip -q _source/source.zip -d _source
+          test -f _source/ZXL_164_PortSuite/scripts/compile-core.sh
+
+      - name: Run Java 8 core smoke checks
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd _source/ZXL_164_PortSuite
+          bash scripts/compile-core.sh
+
+      - name: Upload smoke-check output
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: core-smoke-classes
+          path: _source/ZXL_164_PortSuite/build-core-check
+          if-no-files-found: ignore
