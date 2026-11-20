@@ -13,6 +13,9 @@ subprojects {
     minecraft {
         version = '1.6.4-9.11.1.964'
     }
+    // ForgeGradle 1.0 still defaults to the retired HTTP Minecraft S3 URL.
+    // Force HTTPS so modern CI runners can retrieve the 1.6.4 client jar.
+    tasks.downloadClient.url = 'https://s3.amazonaws.com/Minecraft.Download/versions/1.6.4/1.6.4.jar'
     repositories { mavenCentral() }
     dependencies { testCompile 'junit:junit:4.11' }
     jar { manifest { attributes 'Implementation-Title': project.name, 'Implementation-Version': project.version } }
