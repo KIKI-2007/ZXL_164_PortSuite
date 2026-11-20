@@ -13,7 +13,7 @@ permissions:
 
 jobs:
   forge-build:
-    name: JDK 8 + Gradle 2.14.1 + ForgeGradle 1.2
+    name: JDK 8 + Gradle 2.14.1 + ForgeGradle 1.0
     runs-on: ubuntu-22.04
     timeout-minutes: 45
 
@@ -27,10 +27,13 @@ jobs:
           distribution: temurin
           java-version: '8'
 
-      - name: Set up Gradle 2.14.1
-        uses: gradle/actions/setup-gradle@v4
-        with:
-          gradle-version: '2.14.1'
+      - name: Install exact Gradle 2.14.1 distribution
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl --fail --location --retry 3 https://services.gradle.org/distributions/gradle-2.14.1-bin.zip --output /tmp/gradle-2.14.1-bin.zip
+          unzip -q /tmp/gradle-2.14.1-bin.zip -d /opt
+          echo "/opt/gradle-2.14.1/bin" >> "$GITHUB_PATH"
 
       - name: Print toolchain versions
         run: |
