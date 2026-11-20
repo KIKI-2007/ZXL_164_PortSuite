@@ -23,8 +23,8 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p _source
-          curl --fail --location --retry 3 --output _source/source.zip 'https://1drv.ms/u/c/78393efee1e7a454/IQBEFNa1k_aJQKXcEWRxLi8lAf4Wu-7qhCz1kQkVhV4Zxz8?download=1'
-          unzip -q _source/source.zip -d _source
+          curl --fail --location --retry 3 --output _source/source.tar.gz 'https://1drv.ms/u/c/78393efee1e7a454/IQBpK6XejtHSSaqcm8GE68miAVr_4wQlwP41FiS1vGjwDgQ?download=1'
+          tar -xzf _source/source.tar.gz -C _source
           test -f _source/ZXL_164_PortSuite/scripts/compile-core.sh
 
       - name: Run Java 8 core smoke checks
