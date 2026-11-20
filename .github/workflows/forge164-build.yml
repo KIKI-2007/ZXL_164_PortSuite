@@ -1,0 +1,62 @@
+name: Minecraft 1.6.4 Forge Build
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+    paths:
+      - 'ZXL_164_PortSuite/**'
+      - '.github/workflows/forge164-build.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  forge-build:
+    name: JDK 8 + Gradle 2.14.1 + ForgeGradle 1.2
+    runs-on: ubuntu-22.04
+    timeout-minutes: 45
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 8
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '8'
+
+      - name: Set up Gradle 2.14.1
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '2.14.1'
+
+      - name: Print toolchain versions
+        run: |
+          java -version
+          gradle --version
+
+      - name: Build all five Forge 1.6.4 modules
+        working-directory: ZXL_164_PortSuite
+        run: gradle clean build --no-daemon --stacktrace
+
+      - name: Verify produced JAR files
+        if: success()
+        working-directory: ZXL_164_PortSuite
+        shell: bash
+        run: |
+          set -euo pipefail
+          find . -path '*/build/libs/*.jar' -type f -print
+          count="$(find . -path '*/build/libs/*.jar' -type f | wc -l)"
+          test "$count" -ge 5
+
+      - name: Upload build outputs and reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Minecraft-1.6.4-Forge-Build
+          path: |
+            ZXL_164_PortSuite/**/build/libs/*.jar
+            ZXL_164_PortSuite/**/build/reports/**
+          if-no-files-found: warn
