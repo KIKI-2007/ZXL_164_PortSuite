@@ -18,12 +18,12 @@ jobs:
           distribution: temurin
           java-version: '8'
 
-      - name: Download source scaffold archive
+      - name: Download source archive through Microsoft Graph
         shell: bash
         run: |
           set -euo pipefail
           mkdir -p _source
-          curl --fail --location --retry 3 --output _source/source.tar.gz 'https://1drv.ms/u/c/78393efee1e7a454/IQBpK6XejtHSSaqcm8GE68miAVr_4wQlwP41FiS1vGjwDgQ?download=1'
+          curl --fail --location --retry 3 --output _source/source.tar.gz 'https://graph.microsoft.com/v1.0/shares/u!aHR0cHM6Ly8xZHJ2Lm1zL3UvYy83ODM5M2VmZWUxZTdhNDU0L0lRQnBLNlhlanRIU1NhcWNtOEdFNjhtaUFWcl80d1Fsd1A0MUZpUzF2R2p3RGdR/driveItem/content'
           tar -xzf _source/source.tar.gz -C _source
           test -f _source/ZXL_164_PortSuite/scripts/compile-core.sh
 
