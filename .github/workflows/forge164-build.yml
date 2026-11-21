@@ -1,5 +1,9 @@
 name: Minecraft 1.6.4 Forge Build
 
+concurrency:
+  group: forge164-build-${{ github.ref }}
+  cancel-in-progress: true
+
 on:
   workflow_dispatch:
   push:
