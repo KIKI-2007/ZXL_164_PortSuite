@@ -1,19 +1,53 @@
 buildscript {
-    repositories { mavenCentral(); maven { url = 'https://maven.minecraftforge.net/' } }
-    dependencies { classpath 'net.minecraftforge.gradle:ForgeGradle:1.0-SNAPSHOT' }
+    repositories {
+        mavenCentral()
+        maven { url = 'https://maven.minecraftforge.net/' }
+    }
+    dependencies {
+        classpath 'net.minecraftforge.gradle:ForgeGradle:1.0-SNAPSHOT'
+    }
 }
+
 allprojects {
     group = 'com.zxl.better164'
     version = '0.1.0-alpha'
 }
+
 subprojects {
     apply plugin: 'forge'
+
     sourceCompatibility = 1.7
     targetCompatibility = 1.7
+
     minecraft {
         version = '1.6.4-9.11.1.964'
     }
-    repositories { mavenCentral() }
-    dependencies { testCompile 'junit:junit:4.11' }
-    jar { manifest { attributes 'Implementation-Title': project.name, 'Implementation-Version': project.version } }
+
+    // ForgeGradle 1.0 hard-codes obsolete HTTP S3 URLs for the vanilla jars.
+    // Use its actual DelayedString setter with Mojang's current official object URLs.
+    tasks.downloadClient.setUrl(new net.minecraftforge.gradle.delayed.DelayedString(
+        project,
+        'https://launcher.mojang.com/v1/objects/1703704407101cf72bd88e68579e3696ce733ecd/client.jar'
+    ))
+    tasks.downloadServer.setUrl(new net.minecraftforge.gradle.delayed.DelayedString(
+        project,
+        'https://launcher.mojang.com/v1/objects/050f93c1f3fe9e2052398f7bd6aca10c63d64a87/server.jar'
+    ))
+
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        testCompile 'junit:junit:4.11'
+    }
+
+    jar {
+        manifest {
+            attributes(
+                'Implementation-Title': project.name,
+                'Implementation-Version': project.version
+            )
+        }
+    }
 }
