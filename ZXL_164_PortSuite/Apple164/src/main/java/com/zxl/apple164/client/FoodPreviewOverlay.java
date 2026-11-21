@@ -6,7 +6,6 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
@@ -59,9 +58,6 @@ public class FoodPreviewOverlay {
         String saturationLine = "Saturation: " + oneDecimal(stats.getSaturationLevel())
             + " -> " + oneDecimal(preview.saturationAfter);
 
-        ScaledResolution resolution = new ScaledResolution(
-            minecraft.gameSettings, minecraft.displayWidth, minecraft.displayHeight
-        );
         int x = 6;
         int y = 6;
         int textWidth = Math.max(
