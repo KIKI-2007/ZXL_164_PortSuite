@@ -98,6 +98,8 @@ jobs:
           VERSION="forge-9.11.1.964"
           DEST="releases/$VERSION"
           mkdir -p "$DEST"
+          # Remove artifacts from previous versions before enforcing an exact five-JAR set.
+          rm -f "$DEST"/*.jar "$DEST"/*.zip
           find ZXL_164_PortSuite -path '*/build/libs/*.jar' -type f -exec cp {} "$DEST/" \;
           test "$(find "$DEST" -maxdepth 1 -name '*.jar' -type f | wc -l)" -eq 5
           (cd "$DEST" && zip -q "ZXL_164_PortSuite_Alpha_$VERSION.zip" ./*.jar)
