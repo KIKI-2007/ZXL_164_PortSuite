@@ -40,6 +40,36 @@ jobs:
           java -version
           gradle --version
 
+      - name: Seed legacy Minecraft 1.6.4 jars into ForgeGradle cache
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          import pathlib
+          import urllib.request
+
+          manifest_url = "https://piston-meta.mojang.com/mc/game/version_manifest_v2.json"
+          with urllib.request.urlopen(manifest_url, timeout=30) as response:
+              manifest = json.load(response)
+          version = next(item for item in manifest["versions"] if item["id"] == "1.6.4")
+          with urllib.request.urlopen(version["url"], timeout=30) as response:
+              metadata = json.load(response)
+
+          cache = pathlib.Path.home() / ".gradle/caches/minecraft/net/minecraft"
+          targets = {
+              "client": cache / "minecraft/1.6.4/minecraft-1.6.4.jar",
+              "server": cache / "minecraft_server/1.6.4/minecraft_server-1.6.4.jar",
+          }
+          for kind, target in targets.items():
+              target.parent.mkdir(parents=True, exist_ok=True)
+              url = metadata["downloads"][kind]["url"]
+              request = urllib.request.Request(url, headers={"User-Agent": "ZXL-164-PortSuite-CI"})
+              with urllib.request.urlopen(request, timeout=60) as response, target.open("wb") as output:
+                  output.write(response.read())
+              print(f"Seeded {kind}: {target} ({target.stat().st_size} bytes)")
+          PY
+
       - name: Build all five Forge 1.6.4 modules
         working-directory: ZXL_164_PortSuite
         run: gradle clean build --no-daemon --stacktrace
