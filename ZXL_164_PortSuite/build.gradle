@@ -24,7 +24,7 @@ subprojects {
     }
 
     // ForgeGradle 1.0 hard-codes obsolete HTTP S3 URLs for the vanilla jars.
-    // Use its actual DelayedString setter with Mojang's current official object URLs.
+    // Use Mojang's official object URLs through ForgeGradle's DelayedString setter.
     tasks.downloadClient.setUrl(new net.minecraftforge.gradle.delayed.DelayedString(
         project,
         'https://launcher.mojang.com/v1/objects/1703704407101cf72bd88e68579e3696ce733ecd/client.jar'
@@ -36,6 +36,7 @@ subprojects {
 
     repositories {
         mavenCentral()
+        maven { url = 'https://maven.minecraftforge.net/' }
     }
 
     dependencies {
